@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: store-backend
+    env: python
+    plan: free
+    buildCommand: |
+      pip install -r requirements.txt
+      python manage.py collectstatic --noinput
+      python manage.py migrate
+    startCommand: gunicorn ecommerce.wsgi:application
+    envVars:
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DJANGO_DEBUG
+        value: "0"
+      - key: PYTHON_VERSION
+        value: "3.12.3"
+databases:
+  - name: store-db
+    plan: free
